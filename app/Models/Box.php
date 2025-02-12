@@ -10,6 +10,12 @@ class Box extends Model
         'name',
         'description',
         'price',
-        'quantity'
+        'quantity',
+        'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -9,7 +9,7 @@ class BoxController extends Controller
 {
     public function index()
     {
-        $boxes = Box::all();
+        $boxes = auth()->user()->boxes()->latest()->get();
         return view('boxes.index', compact('boxes'));
     }
 
@@ -21,11 +21,18 @@ class BoxController extends Controller
 
     public function edit(Box $box)
     {
+        if ($box->user_id !== auth()->id()) {
+            abort(403);
+        }
         return view('boxes.edit', compact('box'));
     }
 
     public function update(Request $request, Box $box)
     {
+        if ($box->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         // Validation des données
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -44,6 +51,10 @@ class BoxController extends Controller
 
     public function destroy(Box $box)
     {
+        if ($box->user_id !== auth()->id()) {
+            abort(403);
+        }
+        
         $box->delete();
         return redirect()->route('boxes.index');
     }
@@ -55,7 +66,6 @@ class BoxController extends Controller
 
     public function store(Request $request)
     {
-        // Validation des données
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -64,7 +74,7 @@ class BoxController extends Controller
         ]);
 
         try {
-            $box = Box::create($validated);
+            $box = auth()->user()->boxes()->create($validated);
             return redirect()->route('boxes.index')->with('success', 'Box créée avec succès');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erreur lors de la création de la box')->withInput();
