@@ -24,7 +24,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('locataire.store') }}">
+                <form method="POST" action="{{ route('locataires.store') }}">
                     @csrf
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; margin-bottom: 5px;">

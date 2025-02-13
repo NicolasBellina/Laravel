@@ -4,7 +4,7 @@
             <h2 style="font-size: 24px;">
                 {{ __('Locataires') }}
             </h2>
-            <a href="{{ route('locataire.create') }}" style="color: #007bff; padding: 8px 16px; text-decoration: none; border-radius: 4px;">
+            <a href="{{ route('locataires.create') }}" style="color: #007bff; padding: 8px 16px; text-decoration: none; border-radius: 4px;">
                 + Ajouter un locataire
             </a>
         </div>
@@ -46,11 +46,11 @@
                                 <td style="border: 1px solid #ddd; padding: 8px;">{{ $locataire->compte_bancaire }}</td>
                                 <td style="border: 1px solid #ddd; padding: 8px;">
                                     <div style="display: flex; gap: 10px;">
-                                        <a href="{{ route('locataire.edit', $locataire) }}" 
+                                        <a href="{{ route('locataires.edit', $locataire) }}" 
                                         style="color: #28a745; padding: 4px 8px; text-decoration: none; border-radius: 4px;">
                                             Modifier
                                         </a>
-                                        <form action="{{ route('locataire.destroy', $locataire) }}" method="POST" style="display: inline;">
+                                        <form action="{{ route('locataires.destroy', $locataire) }}" method="POST" style="display: inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" style= "color: #dc3545; padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer;" onclick="return confirm('Êtes-vous sûr ?')">
@@ -61,11 +61,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="6" style="border: 1px solid #ddd; padding: 8px; text-align: center;">
-                                    Aucun locataire trouvé
-                                </td>
-                            </tr>
+                            
                         @endforelse
                     </tbody>
                 </table>

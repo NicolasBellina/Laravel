@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BoxController;
 use App\Http\Controllers\LocataireController;
+use App\Http\Controllers\LocationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,12 +27,21 @@ Route::middleware('auth')->group(function () {
     Route::put('/boxes/{box}', [BoxController::class, 'update'])->name('boxes.update');
     Route::delete('/boxes/{box}', [BoxController::class, 'destroy'])->name('boxes.destroy');
 
-    Route::get('/locataire', [LocataireController::class, 'index'])->name('locataire.index');
-    Route::get('/locataire/create', [LocataireController::class, 'create'])->name('locataire.create');
-    Route::post('/locataire', [LocataireController::class, 'store'])->name('locataire.store');
-    Route::get('/locataire/{locataire}/edit', [LocataireController::class, 'edit'])->name('locataire.edit');
-    Route::put('/locataire/{locataire}', [LocataireController::class, 'update'])->name('locataire.update');
-    Route::delete('/locataire/{locataire}', [LocataireController::class, 'destroy'])->name('locataire.destroy');
+    // Routes des locataires
+    Route::get('/locataires', [LocataireController::class, 'index'])->name('locataires.index');
+    Route::get('/locataires/create', [LocataireController::class, 'create'])->name('locataires.create');
+    Route::post('/locataires', [LocataireController::class, 'store'])->name('locataires.store');
+    Route::get('/locataires/{locataire}/edit', [LocataireController::class, 'edit'])->name('locataires.edit');
+    Route::put('/locataires/{locataire}', [LocataireController::class, 'update'])->name('locataires.update');
+    Route::delete('/locataires/{locataire}', [LocataireController::class, 'destroy'])->name('locataires.destroy');
+
+    // Routes des locations
+    Route::get('/locations', [LocationController::class, 'index'])->name('locations.index');
+    Route::get('/locations/create', [LocationController::class, 'create'])->name('locations.create');
+    Route::post('/locations', [LocationController::class, 'store'])->name('locations.store');
+    Route::get('/locations/{location}/edit', [LocationController::class, 'edit'])->name('locations.edit');
+    Route::put('/locations/{location}', [LocationController::class, 'update'])->name('locations.update');
+    Route::delete('/locations/{location}', [LocationController::class, 'destroy'])->name('locations.destroy');
 });
 
 require __DIR__.'/auth.php';

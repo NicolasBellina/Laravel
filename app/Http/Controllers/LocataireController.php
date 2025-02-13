@@ -27,7 +27,7 @@ class LocataireController extends Controller
         return view('locataires.edit', compact('locataire'));
     }
 
-    public function update(Request $request, Locataire $locataire)
+        public function update(Request $request, Locataire $locataire)
     {
         if ($locataire->user_id !== auth()->id()) {
             abort(403);
@@ -44,7 +44,7 @@ class LocataireController extends Controller
 
         try {
             $locataire->update($validated);
-            return redirect()->route('locataire.index')->with('success', 'Locataire modifié avec succès');
+            return redirect()->route('locataires.index')->with('success', 'Locataire modifié avec succès');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erreur lors de la modification du locataire')->withInput();
         }
@@ -57,7 +57,7 @@ class LocataireController extends Controller
         }
         
         $locataire->delete();
-        return redirect()->route('locataire.index');
+        return redirect()->route('locataires.index');
     }
 
     public function create()
@@ -77,7 +77,7 @@ class LocataireController extends Controller
 
         try {
             $locataire = auth()->user()->locataires()->create($validated);
-            return redirect()->route('locataire.index')->with('success', 'Locataire créé avec succès');
+            return redirect()->route('locataires.index')->with('success', 'Locataire créé avec succès');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erreur lors de la création du locataire')->withInput();
         }

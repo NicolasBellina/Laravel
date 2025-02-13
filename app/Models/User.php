@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Locataire;
+use App\Models\Location;
 
 class User extends Authenticatable
 {
@@ -55,5 +56,10 @@ class User extends Authenticatable
     public function locataires()
     {
         return $this->hasMany(Locataire::class);
+    }
+
+    public function locations()
+    {
+        return $this->hasMany(Location::class);
     }
 }

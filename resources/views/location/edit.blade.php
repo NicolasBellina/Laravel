@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 style="font-size: 24px;">
-            {{ __('Modifier le locataire') }}
+            {{ __('Modifier la location') }}
         </h2>
     </x-slot>
 
@@ -18,47 +18,39 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('locataires.update', $locataire) }}">
+                <form method="POST" action="{{ route('location.update', $location) }}">
                     @csrf
                     @method('PUT')
                     
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; margin-bottom: 5px;">
-                            Nom
+                            Date de début
                         </label>
-                        <input type="text" name="nom" value="{{ $locataire->nom }}" required 
+                        <input type="date" name="date_de_debut" value="{{ $location->date_de_debut }}" required 
                             style="width: 100%; padding: 8px; border: 1px solid #ddd;">
                     </div>
 
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; margin-bottom: 5px;">
-                            Téléphone
+                            Date de fin
                         </label>
-                        <input type="text" name="tel" value="{{ $locataire->tel }}" required 
+                        <input type="date" name="date_de_fin" value="{{ $location->date_de_fin }}" required 
                             style="width: 100%; padding: 8px; border: 1px solid #ddd;">
                     </div>
 
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; margin-bottom: 5px;">
-                            Mail
+                            Montant payé
                         </label>
-                        <input type="text" name="mail" value="{{ $locataire->mail }}" required 
+                        <input type="number" step="0.01" name="montant_paye" value="{{ $location->montant_paye }}" required 
                             style="width: 100%; padding: 8px; border: 1px solid #ddd;">
                     </div>
 
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; margin-bottom: 5px;">
-                            Adresse
+                            Locataire
                         </label>
-                        <input type="text" name="adresse" value="{{ $locataire->adresse }}" required 
-                            style="width: 100%; padding: 8px; border: 1px solid #ddd;">
-                    </div>
-
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 5px;">
-                            Compte Bancaire
-                        </label>
-                        <input type="text" name="compte_bancaire" value="{{ $locataire->compte_bancaire }}" required 
+                        <input type="number" name="locataire_id" value="{{ $location->locataire_id }}" required 
                             style="width: 100%; padding: 8px; border: 1px solid #ddd;">
                     </div>
 
@@ -66,7 +58,7 @@
                         <button type="submit" style="color: rgb(0, 0, 0); padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
                             Modifier
                         </button>
-                        <a href="{{ route('locataires.index') }}" style="color: rgb(0, 0, 0); padding: 8px 16px; text-decoration: none; border-radius: 4px;">
+                        <a href="{{ route('boxes.index') }}" style="color: rgb(0, 0, 0); padding: 8px 16px; text-decoration: none; border-radius: 4px;">
                             Annuler
                         </a>
                     </div>
