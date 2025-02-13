@@ -56,6 +56,10 @@
                                             Supprimer
                                         </button>
                                     </form>
+                                    <a href="{{ route('contrat-templates.select', $location) }}" 
+                                       style="color: #007bff; padding: 4px 8px; text-decoration: none; border-radius: 4px;">
+                                        Générer Contrat
+                                    </a>
                                 </div>
                             </td>
                         </tr>

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Locataire;
 use App\Models\Location;
+use App\Models\ContratTemplate;
 
 class User extends Authenticatable
 {
@@ -61,5 +62,10 @@ class User extends Authenticatable
     public function locations()
     {
         return $this->hasMany(Location::class);
+    }
+
+    public function contratTemplates()
+    {
+        return $this->hasMany(ContratTemplate::class);
     }
 }
