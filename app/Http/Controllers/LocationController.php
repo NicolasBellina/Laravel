@@ -81,6 +81,8 @@ class LocationController extends Controller
             $validated['user_id'] = auth()->id();
             
             $location = Location::create($validated);
+            $location->genererPaiementsMensuels();
+            
             return redirect()->route('locations.index')->with('success', 'Location créée avec succès');
         } catch (\Exception $e) {
             return redirect()->back()

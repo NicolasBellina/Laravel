@@ -35,4 +35,25 @@ class Location extends Model
     {
         return $this->belongsTo(Locataire::class);
     }
+
+    public function paiements()
+    {
+        return $this->hasMany(Paiement::class);
+    }
+
+    public function genererPaiementsMensuels()
+    {
+        $debut = $this->date_de_debut;
+        $fin = $this->date_de_fin;
+        $montantMensuel = $this->montant_paye;
+
+        while ($debut <= $fin) {
+            $this->paiements()->create([
+                'date_paiement' => $debut->copy(),
+                'montant' => $montantMensuel,
+                'est_paye' => false
+            ]);
+            $debut->addMonth();
+        }
+    }
 }
