@@ -51,6 +51,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/contrat-templates/{template}', [ContratTemplateController::class, 'destroy'])->name('contrat-templates.destroy');
     Route::get('/locations/{location}/generate-contrat', [ContratTemplateController::class, 'showTemplateSelection'])->name('contrat-templates.select');
     Route::post('/locations/{location}/generate-contrat/{template}', [ContratTemplateController::class, 'generateContrat'])->name('contrat-templates.generate');
+    Route::get('/contrat-templates/{template}/edit', [ContratTemplateController::class, 'edit'])
+        ->name('contrat-templates.edit');
+    Route::put('/contrat-templates/{template}', [ContratTemplateController::class, 'update'])
+        ->name('contrat-templates.update');
 });
 
 require __DIR__.'/auth.php';

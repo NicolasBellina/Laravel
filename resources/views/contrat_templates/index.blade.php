@@ -32,6 +32,11 @@
                                 <td style="border: 1px solid #ddd; padding: 8px;">{{ $template->nom }}</td>
                                 <td style="border: 1px solid #ddd; padding: 8px;">
                                     <div style="display: flex; gap: 10px;">
+                                        <a href="{{ route('contrat-templates.edit', $template) }}" 
+                                           style="color: #28a745; padding: 4px 8px; text-decoration: none; border-radius: 4px;">
+                                            Modifier
+                                        </a>
+                                        
                                         <form action="{{ route('contrat-templates.destroy', $template) }}" method="POST" style="display: inline;">
                                             @csrf
                                             @method('DELETE')

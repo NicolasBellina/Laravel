@@ -63,4 +63,34 @@ class ContratTemplateController extends Controller
             return redirect()->back()->with('error', 'Erreur lors de la suppression du modèle');
         }
     }
+
+    public function edit(ContratTemplate $template)
+    {
+        if ($template->user_id !== auth()->id()) {
+            abort(403);
+        }
+        return view('contrat_templates.edit', compact('template'));
+    }
+
+    public function update(Request $request, ContratTemplate $template)
+    {
+        if ($template->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'contenu' => 'required|string',
+        ]);
+
+        try {
+            $template->update($validated);
+            return redirect()->route('contrat-templates.index')
+                ->with('success', 'Modèle mis à jour avec succès');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Erreur lors de la mise à jour du modèle')
+                ->withInput();
+        }
+    }
 } 
