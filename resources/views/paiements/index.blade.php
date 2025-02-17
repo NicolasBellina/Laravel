@@ -57,6 +57,7 @@
                                     @csrf
                                     @method('PUT')
                                     <input type="hidden" name="date_paiement" value="{{ $paiement->date_paiement->format('Y-m-d') }}">
+                                    <input type="hidden" name="est_paye" value="0">
                                     <label style="display: flex; align-items: center; gap: 8px;">
                                         <input type="checkbox" 
                                                name="est_paye" 
@@ -78,6 +79,7 @@
                                     @csrf
                                     @method('PUT')
                                     <input type="hidden" name="date_paiement" value="{{ $paiement->date_paiement->format('Y-m-d') }}">
+                                    <input type="hidden" name="est_paye" value="{{ $paiement->est_paye }}">
                                     <select name="methode_paiement" 
                                             onchange="this.form.submit()"
                                             style="padding: 6px; border: 1px solid #ddd; border-radius: 4px; background-color: white;">
@@ -94,10 +96,13 @@
                                 {{ $paiement->methode_paiement_formattee }}
                             </td>
                             <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
-                                <button onclick="openEditModal({{ $paiement->id }})"
-                                        style="color: #007bff; padding: 4px 8px; border: none; background: none; cursor: pointer;">
-                                    Détails
-                                </button>
+                                @if($paiement->est_paye)
+                                    <a href="{{ route('factures.generate', $paiement) }}" 
+                                       target="_blank"
+                                       style="color: #28a745; padding: 4px 8px; text-decoration: none; border-radius: 4px; margin-right: 8px;">
+                                        Générer Facture
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -107,14 +112,8 @@
         </div>
     </div>
 
-    <!-- Modal pour éditer les détails -->
-    <div id="editModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);">
-        <!-- Contenu du modal... -->
-    </div>
-
     <script>
         function openEditModal(paiementId) {
-            // Logique pour ouvrir le modal
         }
     </script>
 </x-app-layout> 

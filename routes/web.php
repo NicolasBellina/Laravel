@@ -6,6 +6,7 @@ use App\Http\Controllers\LocataireController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ContratTemplateController;
 use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\FactureController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -58,6 +59,9 @@ Route::middleware('auth')->group(function () {
     // Routes des paiements
     Route::get('/locations/{location}/paiements', [PaiementController::class, 'index'])->name('paiements.index');
     Route::put('/paiements/{paiement}', [PaiementController::class, 'update'])->name('paiements.update');
+
+    // Routes des factures
+    Route::get('/factures/{paiement}', [FactureController::class, 'generate'])->name('factures.generate');
 });
 
 require __DIR__.'/auth.php';

@@ -40,4 +40,9 @@ class Paiement extends Model
 
         return $formats[$this->methode_paiement] ?? '-';
     }
+
+    public function facture()
+    {
+        return $this->hasOne(Facture::class);
+    }
 } 
