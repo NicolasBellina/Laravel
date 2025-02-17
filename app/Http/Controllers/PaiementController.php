@@ -23,7 +23,6 @@ class PaiementController extends Controller
             'commentaire' => 'nullable|string'
         ]);
 
-        // Si le mode de paiement est défini, marquer comme payé
         if (!empty($validated['methode_paiement'])) {
             $validated['est_paye'] = true;
         }

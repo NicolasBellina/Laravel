@@ -69,12 +69,6 @@ class ContratTemplateController extends Controller
         return $pdf->download($filename);
     }
 
-    private function generateContratContent($location, $template)
-    {
-        // Votre logique existante de génération de contenu
-        // ...
-    }
-
     public function destroy(ContratTemplate $template)
     {
         if ($template->user_id !== auth()->id()) {
@@ -117,11 +111,5 @@ class ContratTemplateController extends Controller
                 ->with('error', 'Erreur lors de la mise à jour du modèle')
                 ->withInput();
         }
-    }
-
-    public function preview(Location $location, ContratTemplate $template)
-    {
-        $contrat = $template->generateContrat($location);
-        return view('contrat_templates.preview', compact('contrat', 'location', 'template'));
     }
 } 

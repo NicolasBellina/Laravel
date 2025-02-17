@@ -13,12 +13,6 @@ class LocataireController extends Controller
         return view('locataires.index', compact('locataires'));
     }
 
-    public function show(Locataire $locataire)
-    {
-        return view('locataires.show', compact('locataire'));
-    }
-    
-
     public function edit(Locataire $locataire)
     {
         if ($locataire->user_id !== auth()->id()) {   

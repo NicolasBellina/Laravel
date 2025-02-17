@@ -56,4 +56,5 @@ class Location extends Model
             $debut->addMonth();
         }
     }
+    
 }

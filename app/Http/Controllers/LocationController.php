@@ -13,12 +13,6 @@ class LocationController extends Controller
         return view('locations.index', compact('locations'));
     }
 
-    public function show(Location $location)
-    {
-            return view('locations.show', compact('location'));
-    }
-    
-
     public function edit(Location $location)
     {
             if ($location->user_id !== auth()->id()) {   
@@ -77,7 +71,6 @@ class LocationController extends Controller
         ]);
 
         try {
-            // Ajout automatique de l'user_id
             $validated['user_id'] = auth()->id();
             
             $location = Location::create($validated);
@@ -90,6 +83,4 @@ class LocationController extends Controller
                 ->withInput();
         }
     }
-    
-
 }

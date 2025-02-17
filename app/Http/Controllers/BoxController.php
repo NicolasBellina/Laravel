@@ -13,12 +13,6 @@ class BoxController extends Controller
         return view('boxes.index', compact('boxes'));
     }
 
-    public function show(Box $box)
-    {
-        return view('boxes.show', compact('box'));
-    }
-    
-
     public function edit(Box $box)
     {
         if ($box->user_id !== auth()->id()) {
@@ -79,7 +73,6 @@ class BoxController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erreur lors de la création de la box')->withInput();
         }
-    }
-    
+    }    
 
 }
