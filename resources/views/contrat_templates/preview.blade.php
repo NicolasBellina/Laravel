@@ -11,10 +11,13 @@
                 <div style="white-space: pre-wrap;">{{ $contrat }}</div>
                 
                 <div style="margin-top: 20px;">
-                    <button onclick="window.print()" style="color: rgb(0, 0, 0); padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
-                        Imprimer
-                    </button>
-                    <a href="{{ route('locations.index') }}" style="color: rgb(0, 0, 0); padding: 8px 16px; text-decoration: none; border-radius: 4px; margin-left: 10px;">
+                    <a href="{{ route('contrat-templates.download', ['location' => $location, 'template' => $template]) }}" 
+                       class="button"
+                       style="color: rgb(0, 0, 0); padding: 8px 16px; text-decoration: none; border-radius: 4px; margin-left: 10px;">
+                        Télécharger PDF
+                    </a>
+                    <a href="{{ route('locations.index') }}" 
+                       style="color: rgb(0, 0, 0); padding: 8px 16px; text-decoration: none; border-radius: 4px; margin-left: 10px;">
                         Retour
                     </a>
                 </div>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ContratTemplate;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class ContratTemplateController extends Controller
 {
@@ -47,7 +49,30 @@ class ContratTemplateController extends Controller
     public function generateContrat(Location $location, ContratTemplate $template)
     {
         $contrat = $template->generateContrat($location);
-        return view('contrat_templates.preview', compact('contrat'));
+        return view('contrat_templates.preview', compact('contrat', 'location', 'template'));
+    }
+
+    public function generateContratPdf(Location $location, ContratTemplate $template)
+    {
+        $contrat = $template->generateContrat($location);
+        
+        $data = [
+            'contrat' => $contrat,
+            'location' => $location,
+            'date' => now()->format('d/m/Y')
+        ];
+
+        $pdf = Pdf::loadView('contrat_templates.pdf', $data);
+        
+        $filename = 'contrat_location_' . $location->id . '_' . now()->format('Y-m-d') . '.pdf';
+        
+        return $pdf->download($filename);
+    }
+
+    private function generateContratContent($location, $template)
+    {
+        // Votre logique existante de génération de contenu
+        // ...
     }
 
     public function destroy(ContratTemplate $template)
@@ -92,5 +117,11 @@ class ContratTemplateController extends Controller
                 ->with('error', 'Erreur lors de la mise à jour du modèle')
                 ->withInput();
         }
+    }
+
+    public function preview(Location $location, ContratTemplate $template)
+    {
+        $contrat = $template->generateContrat($location);
+        return view('contrat_templates.preview', compact('contrat', 'location', 'template'));
     }
 } 

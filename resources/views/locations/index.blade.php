@@ -61,7 +61,7 @@
                                         Générer Contrat
                                     </a>
                                     <a href="{{ route('paiements.index', $location) }}" 
-                                       style="color: #007bff; padding: 4px 8px; text-decoration: none; border-radius: 4px;">
+                                       style="color: #8E4A49; padding: 4px 8px; text-decoration: none; border-radius: 4px;">
                                         Suivi des paiements
                                     </a>
                                 </div>
