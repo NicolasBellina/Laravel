@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
 
     // Routes des impôts
     Route::get('/impots', [ImpotController::class, 'index'])->name('impots.index');
+    Route::get('/impots/export/{annee}', [ImpotController::class, 'exportPdf'])->name('impots.export');
 });
 
 require __DIR__.'/auth.php';

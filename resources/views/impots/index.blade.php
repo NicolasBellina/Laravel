@@ -11,7 +11,10 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     @foreach($impots as $impot)
                         <div class="mb-8 p-4 border rounded">
-                            <h3 class="text-lg font-semibold mb-4">Année {{ is_array($impot) ? $impot['annee'] : $impot->annee }}</h3>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold">Année {{ is_array($impot) ? $impot['annee'] : $impot->annee }}</h3>
+                               
+                            </div>
                             
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
@@ -40,6 +43,13 @@
                                     ⚠️ Régime réel obligatoire (revenus > 15 000€)
                                 </div>
                             @endif
+                            
+                            @if(!is_array($impot) && $impot->montant_total > 0)
+                            <a href="{{ route('impots.export', ['annee' => $impot->annee]) }}" 
+                               class="text-blue-500" style="text-decoration: none;">
+                                Exporter en PDF
+                            </a>
+                        @endif
                         </div>
                     @endforeach
                 </div>

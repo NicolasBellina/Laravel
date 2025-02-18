@@ -6,6 +6,7 @@ use App\Models\Impot;
 use App\Models\Paiement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ImpotController extends Controller
 {
@@ -53,5 +54,16 @@ class ImpotController extends Controller
         });
 
         return view('impots.index', compact('impots'));
+    }
+
+    public function exportPdf($annee)
+    {
+        $impot = Impot::where('user_id', auth()->id())
+                      ->where('annee', $annee)
+                      ->firstOrFail();
+
+        $pdf = PDF::loadView('impots.pdf', compact('impot'));
+        
+        return $pdf->download("declaration-impots-{$annee}.pdf");
     }
 } 
