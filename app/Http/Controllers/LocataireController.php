@@ -27,7 +27,6 @@ class LocataireController extends Controller
             abort(403);
         }
 
-        // Validation des données
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'tel' => 'required|string|max:255',

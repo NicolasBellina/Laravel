@@ -16,7 +16,6 @@ class ImpotController extends Controller
         $annees = range($anneeActuelle - 2, $anneeActuelle);
         
         $impots = collect($annees)->map(function($annee) {
-            // Calcul du montant total
             $montantTotal = Paiement::whereHas('location', function($query) {
                 $query->where('user_id', auth()->id());
             })
@@ -24,7 +23,6 @@ class ImpotController extends Controller
             ->where('est_paye', true)
             ->sum('montant');
 
-            // Création ou mise à jour de l'enregistrement dans la base
             if ($montantTotal > 0) {
                 return Impot::updateOrCreate(
                     [
@@ -41,7 +39,6 @@ class ImpotController extends Controller
                 );
             }
 
-            // Récupération de l'impôt existant ou création d'un tableau vide
             return Impot::where('user_id', auth()->id())
                         ->where('annee', $annee)
                         ->first() ?? [

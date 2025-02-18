@@ -27,7 +27,6 @@ class BoxController extends Controller
             abort(403);
         }
 
-        // Validation des données
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',

@@ -12,12 +12,10 @@ class FactureController extends Controller
 {
     public function generate(Paiement $paiement)
     {
-        // Vérifier que le paiement est effectivement payé
         if (!$paiement->est_paye) {
             return redirect()->back()->with('error', 'Impossible de générer une facture pour un paiement non effectué');
         }
 
-        // Vérifier si une facture existe déjà
         if ($paiement->facture) {
             return Storage::download($paiement->facture->pdf_path);
         }
@@ -35,11 +33,9 @@ class FactureController extends Controller
 
         $pdf = Pdf::loadView('factures.template', $data);
         
-        // Sauvegarder le PDF
         $path = 'factures/' . $data['numero_facture'] . '.pdf';
         Storage::put($path, $pdf->output());
 
-        // Créer l'enregistrement de facture
         Facture::create([
             'paiement_id' => $paiement->id,
             'numero_facture' => $numero_facture,
