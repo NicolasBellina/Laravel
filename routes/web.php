@@ -7,6 +7,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ContratTemplateController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\FactureController;
+use App\Http\Controllers\ImpotController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -65,6 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/factures/{paiement}', [FactureController::class, 'generate'])->name('factures.generate');
 
     // Routes des impôts
+    Route::get('/impots', [ImpotController::class, 'index'])->name('impots.index');
 });
 
 require __DIR__.'/auth.php';

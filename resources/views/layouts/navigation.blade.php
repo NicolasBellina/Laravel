@@ -27,6 +27,9 @@
                     <x-nav-link :href="route('contrat-templates.index')" :active="request()->routeIs('contrat-templates.index')">
                         {{ __('Contrat Templates') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('impots.index')" :active="request()->routeIs('impots.index')">
+                        {{ __('Impots') }}
+                    </x-nav-link>
                 </div>
             </div>
 
