@@ -22,14 +22,14 @@ class ContratTemplate extends Model
         $contenu = $this->contenu;
         
         $variables = [
-            '{{ nom_locataire }}' => $location->locataire->nom,
-            '{{ tel_locataire }}' => $location->locataire->tel,
-            '{{ mail_locataire }}' => $location->locataire->mail,
-            '{{ adresse_locataire }}' => $location->locataire->adresse,
-            '{{ box_name }}' => $location->box->name,
-            '{{ date_debut }}' => $location->date_de_debut->format('d/m/Y'),
-            '{{ date_fin }}' => $location->date_de_fin->format('d/m/Y'),
-            '{{ montant }}' => $location->montant_paye,
+            '@{{ nom_locataire }}' => $location->locataire->nom,
+            '@{{ tel_locataire }}' => $location->locataire->tel,
+            '@{{ mail_locataire }}' => $location->locataire->mail,
+            '@{{ adresse_locataire }}' => $location->locataire->adresse,
+            '@{{ box_name }}' => $location->box->name,
+            '@{{ date_debut }}' => $location->date_de_debut->format('d/m/Y'),
+            '@{{ date_fin }}' => $location->date_de_fin->format('d/m/Y'),
+            '@{{ montant }}' => $location->montant_paye,
         ];
 
         return str_replace(array_keys($variables), array_values($variables), $contenu);

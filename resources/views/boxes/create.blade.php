@@ -49,9 +49,10 @@
 
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; margin-bottom: 5px;">
-                           Stockage
+                            Stockage (m²)
                         </label>
-                        <input type="number" name="quantity" required style="width: 100%; padding: 8px; border: 1px solid #ddd;">
+                        <input type="number" name="stockage" value="{{ old('stockage') }}" required 
+                            style="width: 100%; padding: 8px; border: 1px solid #ddd;">
                     </div>
 
                     <button type="submit" style="color: rgb(0, 0, 0); padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">

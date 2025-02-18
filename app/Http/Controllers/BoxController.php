@@ -30,9 +30,9 @@ class BoxController extends Controller
         // Validation des données
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:0',
+            'stockage' => 'required|numeric|min:0'
         ]);
 
         try {
@@ -62,17 +62,15 @@ class BoxController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:0',
+            'stockage' => 'required|numeric|min:0'
         ]);
 
-        try {
-            $box = auth()->user()->boxes()->create($validated);
-            return redirect()->route('boxes.index')->with('success', 'Box créée avec succès');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Erreur lors de la création de la box')->withInput();
-        }
+        $validated['user_id'] = auth()->id();
+        Box::create($validated);
+
+        return redirect()->route('boxes.index');
     }    
 
 }

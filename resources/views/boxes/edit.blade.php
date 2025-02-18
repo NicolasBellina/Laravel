@@ -48,9 +48,9 @@
 
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; margin-bottom: 5px;">
-                           Stockage
+                            Stockage (m²)
                         </label>
-                        <input type="number" name="quantity" value="{{ $box->quantity }}" required 
+                        <input type="number" name="stockage" value="{{ $box->stockage }}" required 
                             style="width: 100%; padding: 8px; border: 1px solid #ddd;">
                     </div>
 
