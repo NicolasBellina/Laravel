@@ -40,7 +40,6 @@
         <div style="float: left;">
             <strong>Émetteur :</strong><br>
             {{ auth()->user()->name }}<br>
-            <!-- Ajoutez vos informations d'entreprise ici -->
         </div>
         <div style="float: right;">
             <strong>Client :</strong><br>

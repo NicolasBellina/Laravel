@@ -8,7 +8,6 @@
     <div style="padding: 20px;">
         <div style="max-width: 1200px; margin: 0 auto;">
             <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <!-- Informations de la location -->
                 <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
                         <div>
@@ -33,7 +32,6 @@
                     </div>
                 </div>
 
-                <!-- Tableau des paiements -->
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>

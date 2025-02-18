@@ -13,7 +13,6 @@
 
     <div style="padding: 20px;">
         <div style="max-width: 800px; margin: 0 auto;">
-            <!-- Information sur la location -->
             <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                 <h3 style="font-size: 16px; color: #495057; margin-bottom: 10px;">Détails de la location</h3>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
@@ -36,7 +35,6 @@
                 </div>
             </div>
 
-            <!-- Liste des modèles -->
             <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                 <h3 style="font-size: 18px; margin-bottom: 20px;">Modèles disponibles</h3>
                 
