@@ -49,7 +49,7 @@
 
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; margin-bottom: 5px;">
-                            Quantité
+                           Stockage
                         </label>
                         <input type="number" name="quantity" required style="width: 100%; padding: 8px; border: 1px solid #ddd;">
                     </div>

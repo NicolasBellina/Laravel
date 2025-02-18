@@ -10,7 +10,7 @@ class Box extends Model
         'name',
         'description',
         'price',
-        'quantity',
+        'stockage',
         'user_id'
     ];
 

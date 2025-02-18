@@ -19,7 +19,7 @@
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Nom</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Description</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Prix</th>
-                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Quantité</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Stockage</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Date de création</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Date de modification</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Actions</th>
@@ -31,7 +31,7 @@
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ $box->name }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ $box->description }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ $box->price }}€</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">{{ $box->quantity }}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">{{ $box->stockage }} m²</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ $box->created_at->format('d/m/Y') }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">{{ $box->updated_at->format('d/m/Y') }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px;">
@@ -42,7 +42,7 @@
                                     <form action="{{ route('boxes.destroy', $box) }}" method="POST" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" style= "color: #dc3545; padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer;" onclick="return confirm('Êtes-vous sûr ?')">
+                                        <button type="submit" style="color: #dc3545; padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer;" onclick="return confirm('Êtes-vous sûr ?')">
                                             Supprimer
                                         </button>
                                     </form>
