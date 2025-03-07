@@ -3,7 +3,9 @@
         <h2 style="font-size: 24px;">
             {{ __('Modifier la location') }}
         </h2>
-    </x-slot>
+    </x-slot>  
+
+    
 
     <div style="padding: 20px;">
         <div style="max-width: 800px; margin: 0 auto;">
