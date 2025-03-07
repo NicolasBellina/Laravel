@@ -8,11 +8,4 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    build: {
-        manifest: true,  // Activer la génération du manifeste
-        outDir: 'public/build',  // Répertoire de sortie pour les fichiers construits
-        rollupOptions: {
-            input: 'resources/js/app.js',
-        },
-    },
 });
