@@ -8,4 +8,8 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        manifest: true, // Assurez-vous que le fichier manifest est généré
+        outDir: 'public/build', // Spécifie le répertoire de sortie
+    },
 });
