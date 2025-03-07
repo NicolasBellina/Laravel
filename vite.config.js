@@ -9,10 +9,10 @@ export default defineConfig({
         }),
     ],
     build: {
-        manifest: true, // Assure-toi que le manifeste est activé
-        outDir: 'public/build', // Vérifie que la sortie est définie vers 'public/build'
+        manifest: true,  // Assurez-vous que la génération du manifeste est activée
+        outDir: 'public/build',  // Indique le dossier de sortie
         rollupOptions: {
-            input: '/resources/js/app.js', // Assure-toi que le fichier d'entrée est correct
+            input: 'resources/js/app.js',  // Fichier d'entrée
         },
     },
 });
