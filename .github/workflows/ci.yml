@@ -21,14 +21,34 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
             cd ${{ secrets.PROJECT_PATH }}
+            
+            # Vérifier si le dossier est bien un repo git
+            if [ ! -d ".git" ]; then
+                echo "Le dossier n'est pas un repository Git !"
+                exit 1
+            fi
+            
+            # Forcer la récupération des modifications
+            git reset --hard origin/main
             git pull origin main
             
-            # Installer les dépendances PHP et générer les assets
+            # Vérifier si composer.json et package.json existent
+            if [ ! -f "composer.json" ]; then
+                echo "composer.json est manquant !"
+                exit 1
+            fi
+            
+            if [ ! -f "package.json" ]; then
+                echo "package.json est manquant !"
+                exit 1
+            fi
+            
+            # Installation des dépendances
             composer install --no-interaction --prefer-dist --optimize-autoloader
             npm install
             npm run build
             
-            # Vérifier si artisan existe et exécuter les migrations
+            # Vérifier si artisan existe avant d'exécuter les commandes Laravel
             if [ -f "artisan" ]; then
                 php artisan migrate --force
                 php artisan cache:clear
@@ -38,6 +58,6 @@ jobs:
                 echo "Le fichier artisan est manquant !"
                 exit 1
             fi
-
-            # Redémarrer PHP-FPM (si nécessaire)
-            sudo systemctl restart php8.2-fpm
+            
+            # Redémarrer PHP-FPM (ou Apache si nécessaire)
+            sudo systemctl restart php8.2-fpm || sudo systemctl restart apache2
