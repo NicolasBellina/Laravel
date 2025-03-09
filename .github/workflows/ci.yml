@@ -1,22 +1,43 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.0'
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}
+            git pull origin main
+            
+            # Installer les dépendances PHP et générer les assets
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+            npm install
+            npm run build
+            
+            # Vérifier si artisan existe et exécuter les migrations
+            if [ -f "artisan" ]; then
+                php artisan migrate --force
+                php artisan cache:clear
+                php artisan config:clear
+                php artisan route:clear
+            else
+                echo "Le fichier artisan est manquant !"
+                exit 1
+            fi
 
-    - name: Install dependencies
-      run: composer install
-
-    - name: Run Laravel artisan commands
-      run: php artisan optimize
+            # Redémarrer PHP-FPM (si nécessaire)
+            sudo systemctl restart php8.2-fpm
