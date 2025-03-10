@@ -3,11 +3,11 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - main  # Déclenche le workflow uniquement lorsque des modifications sont poussées vers la branche "master"
 
 jobs:
   deploy:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'  # Vérifie si la branche est bien "master"
     runs-on: ubuntu-latest
 
     steps:
@@ -32,27 +32,4 @@ jobs:
       - name: Install dependencies
         run: |
           cd ${{ secrets.PROJECT_PATH }}
-          composer install --prefer-dist --no-interaction
-
-      # 5. Exécuter les migrations (si nécessaire)
-      - name: Run migrations
-        run: |
-          cd ${{ secrets.PROJECT_PATH }}
-          php artisan migrate --force
-
-      # 6. Copier les fichiers et exécuter le déploiement sur le serveur
-      - name: Push to server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          port: 22  # Si tu utilises un autre port, ajuste-le ici
-          script: |
-            cd ${{ secrets.PROJECT_PATH }}
-            git pull origin master  # Met à jour le code sur le serveur
-            composer install --prefer-dist --no-interaction  # Installe les dépendances sur le serveur
-            php artisan migrate --force  # Applique les migrations
-            php artisan config:cache  # Met en cache les configurations
-            php artisan route:cache  # Met en cache les routes
-            php artisan queue:restart  # Redémarre les queues (si applicable)
+          composer install --prefer-
