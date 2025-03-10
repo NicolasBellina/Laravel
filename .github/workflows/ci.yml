@@ -1,63 +1,47 @@
-name: CI
+name: Deploy Laravel Project
 
 on:
   push:
     branches:
-      - main
+      - main  # Remplace par ta branche si nécessaire
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout du code
+      uses: actions/checkout@v3
 
-      - name: Deploy to server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          script: |
-            cd ${{ secrets.PROJECT_PATH }}
-            
-            # Vérifier si le dossier est bien un repo git
-            if [ ! -d ".git" ]; then
-                echo "Le dossier n'est pas un repository Git !"
-                exit 1
-            fi
-            
-            # Forcer la récupération des modifications
-            git reset --hard origin/main
-            git pull origin main
-            
-            # Vérifier si composer.json et package.json existent
-            if [ ! -f "composer.json" ]; then
-                echo "composer.json est manquant !"
-                exit 1
-            fi
-            
-            if [ ! -f "package.json" ]; then
-                echo "package.json est manquant !"
-                exit 1
-            fi
-            
-            # Installation des dépendances
-            composer install --no-interaction --prefer-dist --optimize-autoloader
-            npm install
-            npm run build
-            
-            # Vérifier si artisan existe avant d'exécuter les commandes Laravel
-            if [ -f "artisan" ]; then
-                php artisan migrate --force
-                php artisan cache:clear
-                php artisan config:clear
-                php artisan route:clear
-            else
-                echo "Le fichier artisan est manquant !"
-                exit 1
-            fi
-            
-            # Redémarrer PHP-FPM (ou Apache si nécessaire)
-            sudo systemctl restart php8.2-fpm || sudo systemctl restart apache2
+    - name: Vérification des fichiers
+      run: ls -la
+
+    - name: Déploiement via SCP
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        source: "./*"
+        target: "/var/www/html"
+        strip_components: 1  # Évite de créer un dossier supplémentaire
+
+    - name: Connexion SSH et mise à jour
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          cd /var/www/html/Laravel
+          git pull origin main  # Assure-toi que la branche est correcte
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+          php artisan migrate --force
+          php artisan cache:clear
+          php artisan config:clear
+          php artisan route:clear
+          php artisan view:clear
+          php artisan optimize
+          chown -R www-data:www-data /var/www/html
+          chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+          systemctl restart apache2  # Remplace par nginx si nécessaire
