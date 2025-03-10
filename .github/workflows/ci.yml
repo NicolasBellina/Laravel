@@ -3,7 +3,7 @@ name: Deploy Laravel Project
 on:
   push:
     branches:
-      - main  # Remplace par ta branche si nécessaire
+      - main
 
 jobs:
   deploy:
@@ -23,8 +23,8 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SERVER_PASSWORD }}
         source: "./*"
-        target: "/var/www/html"
-        strip_components: 1  # Évite de créer un dossier supplémentaire
+        target: "/var/www/html/Laravel"  # Changé pour pointer vers le bon dossier
+        strip_components: 1
 
     - name: Connexion SSH et mise à jour
       uses: appleboy/ssh-action@v0.1.10
@@ -33,15 +33,75 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
-          cd /var/www/html
-          git pull origin main  # Assure-toi que la branche est correcte
+          # Définir COMPOSER_ALLOW_SUPERUSER
+          export COMPOSER_ALLOW_SUPERUSER=1
+          
+          # Se déplacer dans le bon répertoire
+          cd /var/www/html/Laravel
+          
+          # Installer les dépendances Composer
           composer install --no-interaction --prefer-dist --optimize-autoloader
+          
+          # Vérifier et configurer l'environnement
+          if [ ! -f ".env" ]; then
+            cp .env.example .env
+            php artisan key:generate
+          fi
+          
+          # Exécuter les commandes Laravel
           php artisan migrate --force
           php artisan cache:clear
           php artisan config:clear
           php artisan route:clear
           php artisan view:clear
           php artisan optimize
-          chown -R www-data:www-data /var/www/html
-          chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-          systemctl restart apache2  # Remplace par nginx si nécessaire
+          
+          # Corriger les permissions
+          sudo chown -R www-data:www-data /var/www/html/Laravel
+          
+          # Créer les dossiers s'ils n'existent pas
+          mkdir -p /var/www/html/Laravel/storage/logs
+          mkdir -p /var/www/html/Laravel/storage/framework/sessions
+          mkdir -p /var/www/html/Laravel/storage/framework/views
+          mkdir -p /var/www/html/Laravel/storage/framework/cache
+          mkdir -p /var/www/html/Laravel/bootstrap/cache
+          
+          # Définir les permissions correctes
+          sudo find /var/www/html/Laravel/storage -type d -exec chmod 775 {} \;
+          sudo find /var/www/html/Laravel/storage -type f -exec chmod 664 {} \;
+          sudo find /var/www/html/Laravel/bootstrap/cache -type d -exec chmod 775 {} \;
+          sudo find /var/www/html/Laravel/bootstrap/cache -type f -exec chmod 664 {} \;
+          
+          # Redémarrer Nginx
+          sudo service nginx restart
+
+Les principales corrections sont :
+
+1. Changement du chemin cible pour SCP vers `/var/www/html/Laravel`
+2. Ajout de `COMPOSER_ALLOW_SUPERUSER=1`
+3. Suppression de `git pull` car nous utilisons SCP
+4. Création des dossiers nécessaires pour storage et cache
+5. Utilisation de `find` pour les permissions
+6. Ajout de la vérification et création du fichier `.env`
+7. Utilisation de `service nginx restart` au lieu de `systemctl`
+8. Ajout de `sudo` pour les commandes nécessitant des privilèges
+
+Assurez-vous également que :
+
+1. Les secrets GitHub sont correctement configurés dans votre dépôt :
+   - `SERVER_IP`
+   - `SERVER_USERNAME`
+   - `SERVER_PASSWORD`
+
+2. Le dossier `/var/www/html/Laravel` existe sur votre serveur
+
+3. L'utilisateur a les droits sudo sur le serveur
+
+4. Nginx est installé et configuré correctement
+
+Pour tester manuellement sur le serveur :
+
+```bash
+cd /var/www/html/Laravel
+export COMPOSER_ALLOW_SUPERUSER=1
+composer install --no-interaction --prefer-dist --optimize-autoloader
