@@ -1,63 +1,18 @@
 name: CI
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Deploy to server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          script: |
-            cd ${{ secrets.PROJECT_PATH }}
-            
-            # Vérifier si le dossier est bien un repo git
-            if [ ! -d ".git" ]; then
-                echo "Le dossier n'est pas un repository Git !"
-                exit 1
-            fi
-            
-            # Forcer la récupération des modifications
-            git reset --hard origin/main
-            git pull origin main
-            
-            # Vérifier si composer.json et package.json existent
-            if [ ! -f "composer.json" ]; then
-                echo "composer.json est manquant !"
-                exit 1
-            fi
-            
-            if [ ! -f "package.json" ]; then
-                echo "package.json est manquant !"
-                exit 1
-            fi
-            
-            # Installation des dépendances
-            composer install --no-interaction --prefer-dist --optimize-autoloader
-            npm install
-            npm run build
-            
-            # Vérifier si artisan existe avant d'exécuter les commandes Laravel
-            if [ -f "artisan" ]; then
-                php artisan migrate --force
-                php artisan cache:clear
-                php artisan config:clear
-                php artisan route:clear
-            else
-                echo "Le fichier artisan est manquant !"
-                exit 1
-            fi
-            
-            # Redémarrer PHP-FPM (ou Apache si nécessaire)
-            sudo systemctl restart php8.2-fpm || sudo systemctl restart apache2
+    deploy:
+        if: github.ref == 'refs/heads/master'
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2
+        - name: Push to server
+            uses: appleboy/ssh-action@master
+            with:
+            host: ${{ secrets.SERVER_IP }}
+            username: ${{ secrets.SERVER_USERNAME }}
+            password: ${{ secrets.SERVER_PASSWORD }}
+            script: |
+                cd ${{ secrets.PROJECT_PATH }}
