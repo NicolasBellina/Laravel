@@ -31,28 +31,33 @@ jobs:
       # 4. Installer les dépendances PHP avec Composer
       - name: Install dependencies
         run: |
+          cd /home/runner/work/Laravel/Laravel  # Assurez-vous que vous êtes dans le bon dossier
           composer install --prefer-dist --no-interaction
 
       # 5. Copier le fichier .env et générer la clé de l'application
       - name: Set up .env and generate app key
         run: |
-          cp .env.example .env
+          cp /home/runner/work/Laravel/Laravel/.env.example /home/runner/work/Laravel/Laravel/.env
+          cd /home/runner/work/Laravel/Laravel
           php artisan key:generate
 
       # 6. Effectuer les migrations (si nécessaire)
       - name: Run migrations
         run: |
+          cd /home/runner/work/Laravel/Laravel
           php artisan migrate --force
 
       # 7. Cache les configurations et les routes
       - name: Cache config and routes
         run: |
+          cd /home/runner/work/Laravel/Laravel
           php artisan config:cache
           php artisan route:cache
 
       # 8. Tester le projet
       - name: Run tests
         run: |
+          cd /home/runner/work/Laravel/Laravel
           ./vendor/bin/phpunit --configuration phpunit.xml
 
       # 9. Pousser les fichiers vers le serveur
@@ -63,7 +68,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            cd ${{ secrets.PROJECT_PATH }}  # Chemin du projet sur le serveur
+            cd /var/www/html/Laravel  # Le chemin sur ton serveur
             git pull origin main  # Met à jour le code sur le serveur
             composer install --prefer-dist --no-interaction  # Installe les dépendances sur le serveur
             php artisan migrate --force  # Applique les migrations
