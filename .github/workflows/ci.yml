@@ -22,17 +22,6 @@ jobs:
           php-version: '8.1'  # Utilise la version de PHP nécessaire à ton projet
           extensions: mbstring, xml, bcmath, zip, curl, gd, opcache
 
-      # 3. Installer les dépendances PHP avec Composer
-      - name: Install dependencies
-        run: |
-          composer install --prefer-dist --no-interaction
-
-      # 4. Copier le fichier .env et générer la clé de l'application
-      - name: Set up .env and generate app key
-        run: |
-          cp .env.example .env
-          php artisan key:generate
-
       # 5. Effectuer les migrations (si nécessaire)
       - name: Run migrations
         run: |
