@@ -1,62 +1,66 @@
-name: Laravel CI
+name: CI
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  setup:
+  deploy:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout the repository
-    - name: Checkout code
-      uses: actions/checkout@v2
+      # 1. Vérifier le code source
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    # Set up PHP
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.1'
-        extensions: mbstring, xml, bcmath, zip, curl, gd, opcache
+      # 2. Configurer PHP pour exécuter Laravel
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'  # Utilise la version de PHP nécessaire à ton projet
+          extensions: mbstring, xml, bcmath, zip, curl, gd, opcache
 
-    # Install dependencies
-    - name: Install dependencies
-      run: |
-        composer install --prefer-dist --no-interaction
+      # 3. Installer les dépendances PHP avec Composer
+      - name: Install dependencies
+        run: |
+          composer install --prefer-dist --no-interaction
 
-    # Set up environment file
-    - name: Set up .env
-      run: cp .env.example .env
+      # 4. Copier le fichier .env et générer la clé de l'application
+      - name: Set up .env and generate app key
+        run: |
+          cp .env.example .env
+          php artisan key:generate
 
-    # Generate application key
-    - name: Generate app key
-      run: php artisan key:generate
+      # 5. Effectuer les migrations (si nécessaire)
+      - name: Run migrations
+        run: |
+          php artisan migrate --force
 
-    # Cache configuration and routes
-    - name: Cache config and routes
-      run: |
-        php artisan config:cache
-        php artisan route:cache
+      # 6. Cache les configurations et les routes
+      - name: Cache config and routes
+        run: |
+          php artisan config:cache
+          php artisan route:cache
 
-    # Run database migrations (optional)
-    - name: Run migrations
-      run: |
-        php artisan migrate --env=testing --force
+      # 7. Tester le projet
+      - name: Run tests
+        run: |
+          ./vendor/bin/phpunit --configuration phpunit.xml
 
-    # Run tests
-    - name: Run tests
-      run: |
-        ./vendor/bin/phpunit --configuration phpunit.xml
-
-    # Clear caches
-    - name: Clear cache
-      run: |
-        php artisan cache:clear
-        php artisan config:clear
-        php artisan route:clear
-        php artisan view:clear
+      # 8. Pousser les fichiers vers le serveur
+      - name: Push to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}  # Chemin du projet sur le serveur
+            git pull origin main  # Met à jour le code sur le serveur
+            composer install --prefer-dist --no-interaction  # Installe les dépendances sur le serveur
+            php artisan migrate --force  # Applique les migrations
+            php artisan config:cache  # Met en cache les configurations
+            php artisan route:cache  # Met en cache les routes
+            php artisan queue:restart  # Redémarre les queues (si applicable)
