@@ -3,56 +3,25 @@ name: CI
 on:
   push:
     branches:
-      - main  # Déclenche le workflow uniquement lorsque des modifications sont poussées vers la branche "main"
+      - main  
 
 jobs:
   deploy:
-    if: github.ref == 'refs/heads/main'  # Vérifie si la branche est bien "main"
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Vérifier le code source
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      # 2. Installer PHP (si nécessaire)
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'  # Utilise la version PHP adaptée à ton projet
-          extensions: mbstring, xml, bcmath, zip, curl, gd, opcache
-
-      # 3. Installer Composer (si nécessaire)
-      - name: Install Composer
-        run: |
-          curl -sS https://getcomposer.org/installer | php
-          mv composer.phar /usr/local/bin/composer
-
-      # 4. Installer les dépendances PHP avec Composer
-      - name: Install dependencies
-        run: |
-          cd /var/www/html/Laravel  # Indique le chemin absolu de ton projet sur le serveur
-          composer install --no-interaction --no-dev  # Correction : Retirer le "prefer-dist"
-
-      # 5. Exécuter les migrations (si nécessaire)
-      - name: Run migrations
-        run: |
-          cd /var/www/html/Laravel  # Indique le chemin absolu de ton projet sur le serveur
-          php artisan migrate --force
-
-      # 6. Copier les fichiers et exécuter le déploiement sur le serveur
       - name: Push to server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          port: 22  # Si tu utilises un autre port, ajuste-le ici
           script: |
-            cd /var/www/html/Laravel  # Indique le chemin absolu de ton projet sur le serveur
-            git pull origin main  # Met à jour le code sur le serveur
-            composer install --no-interaction --no-dev  # Installe les dépendances sur le serveur
-            php artisan migrate --force  # Applique les migrations
-            php artisan config:cache  # Met en cache les configurations
-            php artisan route:cache  # Met en cache les routes
-            php artisan queue:restart  # Redémarre les queues (si applicable)
+            cd ${{ secrets.PROJECT_PATH }}
+            # Ajoute d'autres commandes de déploiement ici, comme par exemple :
+            # composer install
+            # php artisan migrate
