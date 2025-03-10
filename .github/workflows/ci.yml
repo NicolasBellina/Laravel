@@ -22,23 +22,40 @@ jobs:
           php-version: '8.1'  # Utilise la version de PHP nécessaire à ton projet
           extensions: mbstring, xml, bcmath, zip, curl, gd, opcache
 
-      # 5. Effectuer les migrations (si nécessaire)
+      # 3. Installer Composer (si nécessaire)
+      - name: Install Composer
+        run: |
+          curl -sS https://getcomposer.org/installer | php
+          mv composer.phar /usr/local/bin/composer
+
+      # 4. Installer les dépendances PHP avec Composer
+      - name: Install dependencies
+        run: |
+          composer install --prefer-dist --no-interaction
+
+      # 5. Copier le fichier .env et générer la clé de l'application
+      - name: Set up .env and generate app key
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      # 6. Effectuer les migrations (si nécessaire)
       - name: Run migrations
         run: |
           php artisan migrate --force
 
-      # 6. Cache les configurations et les routes
+      # 7. Cache les configurations et les routes
       - name: Cache config and routes
         run: |
           php artisan config:cache
           php artisan route:cache
 
-      # 7. Tester le projet
+      # 8. Tester le projet
       - name: Run tests
         run: |
           ./vendor/bin/phpunit --configuration phpunit.xml
 
-      # 8. Pousser les fichiers vers le serveur
+      # 9. Pousser les fichiers vers le serveur
       - name: Push to server
         uses: appleboy/ssh-action@master
         with:
