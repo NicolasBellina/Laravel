@@ -1,18 +1,47 @@
-name: CI
+name: Deploy Laravel Project
 
-on: [push]
+on:
+  push:
+    branches:
+      - main  # Remplace par ta branche si nécessaire
 
 jobs:
-    deploy:
-        if: github.ref == 'refs/heads/master'
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/checkout@v2
-        - name: Push to server
-            uses: appleboy/ssh-action@master
-            with:
-            host: ${{ secrets.SERVER_IP }}
-            username: ${{ secrets.SERVER_USERNAME }}
-            password: ${{ secrets.SERVER_PASSWORD }}
-            script: |
-                cd ${{ secrets.PROJECT_PATH }}
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout du code
+      uses: actions/checkout@v3
+
+    - name: Vérification des fichiers
+      run: ls -la
+
+    - name: Déploiement via SCP
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        source: "./*"
+        target: "/var/www/html"
+        strip_components: 1  # Évite de créer un dossier supplémentaire
+
+    - name: Connexion SSH et mise à jour
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          cd /var/www/html
+          git pull origin main  # Assure-toi que la branche est correcte
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+          php artisan migrate --force
+          php artisan cache:clear
+          php artisan config:clear
+          php artisan route:clear
+          php artisan view:clear
+          php artisan optimize
+          chown -R www-data:www-data /var/www/html
+          chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+          systemctl restart apache2  # Remplace par nginx si nécessaire
