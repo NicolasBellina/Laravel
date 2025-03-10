@@ -31,13 +31,13 @@ jobs:
       # 4. Installer les dépendances PHP avec Composer
       - name: Install dependencies
         run: |
-          cd ${{ secrets.PROJECT_PATH }}
+          cd /var/www/html/Laravel  # Indique le chemin absolu de ton projet sur le serveur
           composer install --no-interaction --no-dev  # Correction : Retirer le "prefer-dist"
 
       # 5. Exécuter les migrations (si nécessaire)
       - name: Run migrations
         run: |
-          cd ${{ secrets.PROJECT_PATH }}
+          cd /var/www/html/Laravel  # Indique le chemin absolu de ton projet sur le serveur
           php artisan migrate --force
 
       # 6. Copier les fichiers et exécuter le déploiement sur le serveur
@@ -49,7 +49,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22  # Si tu utilises un autre port, ajuste-le ici
           script: |
-            cd ${{ secrets.PROJECT_PATH }}
+            cd /var/www/html/Laravel  # Indique le chemin absolu de ton projet sur le serveur
             git pull origin main  # Met à jour le code sur le serveur
             composer install --no-interaction --no-dev  # Installe les dépendances sur le serveur
             php artisan migrate --force  # Applique les migrations
