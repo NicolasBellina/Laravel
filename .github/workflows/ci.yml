@@ -1,77 +1,18 @@
 name: CI
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
-    steps:
-      # 1. Vérifier le code source
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      # 2. Configurer PHP pour exécuter Laravel
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'  # Utilise la version de PHP nécessaire à ton projet
-          extensions: mbstring, xml, bcmath, zip, curl, gd, opcache
-
-      # 3. Installer Composer (si nécessaire)
-      - name: Install Composer
-        run: |
-          curl -sS https://getcomposer.org/installer | php
-          mv composer.phar /usr/local/bin/composer
-
-      # 4. Installer les dépendances PHP avec Composer
-      - name: Install dependencies
-        run: |
-          cd /home/runner/work/Laravel/Laravel  # Assurez-vous que vous êtes dans le bon dossier
-          composer install --prefer-dist --no-interaction
-
-      # 5. Copier le fichier .env et générer la clé de l'application
-      - name: Set up .env and generate app key
-        run: |
-          cp /home/runner/work/Laravel/Laravel/.env.example /home/runner/work/Laravel/Laravel/.env
-          cd /home/runner/work/Laravel/Laravel
-          php artisan key:generate
-
-      # 6. Effectuer les migrations (si nécessaire)
-      - name: Run migrations
-        run: |
-          cd /home/runner/work/Laravel/Laravel
-          php artisan migrate --force
-
-      # 7. Cache les configurations et les routes
-      - name: Cache config and routes
-        run: |
-          cd /home/runner/work/Laravel/Laravel
-          php artisan config:cache
-          php artisan route:cache
-
-      # 8. Tester le projet
-      - name: Run tests
-        run: |
-          cd /home/runner/work/Laravel/Laravel
-          ./vendor/bin/phpunit --configuration phpunit.xml
-
-      # 9. Pousser les fichiers vers le serveur
-      - name: Push to server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          script: |
-            cd /var/www/html/Laravel  # Le chemin sur ton serveur
-            git pull origin main  # Met à jour le code sur le serveur
-            composer install --prefer-dist --no-interaction  # Installe les dépendances sur le serveur
-            php artisan migrate --force  # Applique les migrations
-            php artisan config:cache  # Met en cache les configurations
-            php artisan route:cache  # Met en cache les routes
-            php artisan queue:restart  # Redémarre les queues (si applicable)
+    deploy:
+        if: github.ref == 'refs/heads/master'
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2
+        - name: Push to server
+            uses: appleboy/ssh-action@master
+            with:
+            host: ${{ secrets.SERVER_IP }}
+            username: ${{ secrets.SERVER_USERNAME }}
+            password: ${{ secrets.SERVER_PASSWORD }}
+            script: |
+                cd ${{ secrets.PROJECT_PATH }}
