@@ -17,6 +17,7 @@ class Facture extends Model
     protected $casts = [
         'date_facture' => 'date',
         'montant' => 'decimal:2'
+        
     ];
 
     public function paiement()
